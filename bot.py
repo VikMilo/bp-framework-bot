@@ -99,7 +99,6 @@ class Database:
             logger.info("Database initialized at %s", self.db_name)
     
     def add_user(self, user_id, username, first_name, last_name, role='team_member', team=None):
-        """Добавление или обновление пользователя"""
         try:
             with self.get_connection() as conn:
                 cursor = conn.cursor()
@@ -168,7 +167,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user = update.effective_user
         logger.info(f"User {user.id} ({user.username}) started the bot")
         
-        # Добавляем пользователя в базу
         db.add_user(
             user_id=user.id,
             username=user.username,
@@ -176,16 +174,17 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             last_name=user.last_name
         )
         
+        # Используем HTML вместо Markdown для безопасности
         welcome_text = (
             f"👋 Привет, {user.first_name}!\n\n"
-            "🔷 **Фреймворк управления БП** 🔷\n\n"
-            "**Цель:** Снизить хаос, обеспечить прозрачность, защитить ресурсы команды\n\n"
-            "**Ключевые принципы:**\n"
+            "🔷 ФРЕЙМВОРК УПРАВЛЕНИЯ БП 🔷\n\n"
+            "Цель: Снизить хаос, обеспечить прозрачность, защитить ресурсы команды\n\n"
+            "Ключевые принципы:\n"
             "1️⃣ Регулярные ревью (Ритм встреч)\n"
             "2️⃣ Каналы связи и сбор ОС\n"
             "3️⃣ Принцип работы с изменениями (письменный след)\n"
             "4️⃣ Защита от манипуляций\n\n"
-            "**Доступные команды:**\n"
+            "Доступные команды:\n"
             "/framework - обзор фреймворка\n"
             "/kickoff - провести Kick-off встречу\n"
             "/change_request - создать запрос на изменение\n"
@@ -194,45 +193,40 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "/help - помощь"
         )
         
-        await update.message.reply_text(welcome_text, parse_mode='Markdown')
+        await update.message.reply_text(welcome_text)
         logger.info(f"Start message sent to user {user.id}")
         
     except Exception as e:
         logger.error(f"Error in start command: {e}", exc_info=True)
         await update.message.reply_text(
-            "❌ Произошла ошибка. Пожалуйста, попробуйте позже.\n"
-            f"Ошибка: {str(e)}"
+            "❌ Произошла ошибка. Пожалуйста, попробуйте позже."
         )
 
 async def framework_overview(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Детальный обзор фреймворка"""
     try:
         framework_text = (
-            "📋 **Детальный обзор фреймворка**\n\n"
-            
-            "**1. Регулярные ревью (Ритм встреч)**\n"
-            "• Статус-встречи с бизнесом: 2 раза в неделю по 30 мин\n"
-            "  Формат: «Что сделано / Что планируем / Где нужна помощь»\n"
-            "• Внутренние статусы: за 2 часа до встречи с бизнесом\n"
-            "• Стратсессии / Kick-off: точка входа в процесс\n\n"
-            
-            "**2. Каналы связи и сбор ОС**\n"
-            "• Канал срочных оповещений\n"
-            "  Правило: Только для оперативной ОС и критических блокировок\n"
-            "• Пул обратной связи: раз в неделю структурированный сбор\n\n"
-            
-            "**3. Принцип работы с изменениями**\n"
-            "• Правило «Письменного следа»: изменение не существует без фиксации\n"
-            "• Инструменты: комментарий в документе, задача в трекере\n"
-            "• Фраза-триггер: «Зафиксируйте комментарием в документе»\n\n"
-            
-            "**4. Защита от манипуляций**\n"
-            "• Правило «Пяти минут»: пауза на анализ срочности\n"
-            "• Контекст vs. Цифры: запрос метрик и обоснований\n"
-            "• Роль «Адвоката дьявола» на внутренних статусах"
+            "📋 ДЕТАЛЬНЫЙ ОБЗОР ФРЕЙМВОРКА\n\n"
+            "1. Регулярные ревью (Ритм встреч)\n"
+            "   • Статус-встречи с бизнесом: 2 раза в неделю по 30 мин\n"
+            "     Формат: Что сделано / Что планируем / Где нужна помощь\n"
+            "   • Внутренние статусы: за 2 часа до встречи с бизнесом\n"
+            "   • Стратсессии / Kick-off: точка входа в процесс\n\n"
+            "2. Каналы связи и сбор ОС\n"
+            "   • Канал срочных оповещений\n"
+            "     Правило: Только для оперативной ОС и критических блокировок\n"
+            "   • Пул обратной связи: раз в неделю структурированный сбор\n\n"
+            "3. Принцип работы с изменениями\n"
+            "   • Правило Письменного следа: изменение не существует без фиксации\n"
+            "   • Инструменты: комментарий в документе, задача в трекере\n"
+            "   • Фраза-триггер: Зафиксируйте комментарием в документе\n\n"
+            "4. Защита от манипуляций\n"
+            "   • Правило Пяти минут: пауза на анализ срочности\n"
+            "   • Контекст vs Цифры: запрос метрик и обоснований\n"
+            "   • Роль Адвоката дьявола на внутренних статусах"
         )
         
-        await update.message.reply_text(framework_text, parse_mode='Markdown')
+        await update.message.reply_text(framework_text)
         
     except Exception as e:
         logger.error(f"Error in framework command: {e}")
@@ -242,24 +236,24 @@ async def kickoff_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Kick-off встреча"""
     try:
         kickoff_text = (
-            "🚀 **Kick-off встреча**\n\n"
-            "**Правила фреймворка:**\n\n"
-            "1. **Регулярные встречи**\n"
+            "🚀 KICK-OFF ВСТРЕЧА\n\n"
+            "Правила фреймворка:\n\n"
+            "1. Регулярные встречи\n"
             "   - Статус-встречи с бизнесом: 2 раза в неделю\n"
             "   - Внутренние статусы: за 2 часа до встречи с бизнесом\n\n"
-            "2. **Письменный след**\n"
+            "2. Письменный след\n"
             "   - Любое изменение фиксируется в /change_request\n"
             "   - Без письменной фиксации изменения не существуют\n\n"
-            "3. **Каналы связи**\n"
+            "3. Каналы связи\n"
             "   - Срочные проблемы: /urgent\n"
             "   - Обычные вопросы: на статус-встречах\n\n"
-            "4. **Защита от манипуляций**\n"
+            "4. Защита от манипуляций\n"
             "   - Правило 5 минут на анализ срочности\n"
             "   - Все запросы проходят проверку\n\n"
-            "✅ **Готовы начать?** Используйте /change_request для первого запроса."
+            "✅ Готовы начать? Используйте /change_request для первого запроса."
         )
         
-        await update.message.reply_text(kickoff_text, parse_mode='Markdown')
+        await update.message.reply_text(kickoff_text)
         
     except Exception as e:
         logger.error(f"Error in kickoff command: {e}")
@@ -277,14 +271,14 @@ async def pending_requests(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
             return
         
-        text = "📋 **Ожидающие запросы на изменение:**\n\n"
+        text = "📋 Ожидающие запросы на изменение:\n\n"
         for req in requests:
             priority_emoji = "🔴" if req['priority'] == 'high' else "🟡" if req['priority'] == 'medium' else "🟢"
-            text += f"{priority_emoji} **#{req['id']}** - {req['description'][:80]}\n"
+            text += f"{priority_emoji} #{req['id']} - {req['description'][:80]}\n"
             text += f"   От: {req['first_name'] or req['username']} | Приоритет: {req['priority']}\n"
             text += f"   Статус: {req['status']}\n\n"
         
-        await update.message.reply_text(text, parse_mode='Markdown')
+        await update.message.reply_text(text)
         
     except Exception as e:
         logger.error(f"Error in pending requests: {e}")
@@ -294,13 +288,13 @@ async def change_request_start(update: Update, context: ContextTypes.DEFAULT_TYP
     """Создание запроса на изменение"""
     try:
         request_text = (
-            "📝 **Создание запроса на изменение**\n\n"
+            "📝 СОЗДАНИЕ ЗАПРОСА НА ИЗМЕНЕНИЕ\n\n"
             "Помните правило: изменение не существует без письменной фиксации.\n\n"
             "Опишите запрос на изменение (что нужно изменить и почему):\n\n"
-            "_(отправьте /cancel для отмены)_"
+            "(отправьте /cancel для отмены)"
         )
         
-        await update.message.reply_text(request_text, parse_mode='Markdown')
+        await update.message.reply_text(request_text)
         return CHANGE_REQUEST_DESC
         
     except Exception as e:
@@ -348,10 +342,10 @@ async def change_request_priority(update: Update, context: ContextTypes.DEFAULT_
         
         if request_id:
             response_text = (
-                f"✅ **Запрос на изменение создан!**\n"
+                f"✅ ЗАПРОС СОЗДАН!\n\n"
                 f"ID запроса: #{request_id}\n"
                 f"Приоритет: {priority}\n\n"
-                f"**Что дальше?**\n"
+                f"Что дальше?\n"
                 f"1. Запрос будет рассмотрен на внутреннем статусе\n"
                 f"2. Вы получите уведомление о решении\n\n"
                 f"Используйте /pending для просмотра всех запросов."
@@ -359,7 +353,7 @@ async def change_request_priority(update: Update, context: ContextTypes.DEFAULT_
         else:
             response_text = "❌ Не удалось создать запрос. Попробуйте позже."
         
-        await query.edit_message_text(response_text, parse_mode='Markdown')
+        await query.edit_message_text(response_text)
         
     except Exception as e:
         logger.error(f"Error in change_request_priority: {e}")
@@ -371,9 +365,9 @@ async def urgent_alert_start(update: Update, context: ContextTypes.DEFAULT_TYPE)
     """Начало создания срочного оповещения"""
     try:
         await update.message.reply_text(
-            "⚠️ **Срочное оповещение**\n\n"
+            "⚠️ СРОЧНОЕ ОПОВЕЩЕНИЕ\n\n"
             "Опишите критическую проблему или блокировку:\n\n"
-            "_(нажмите /cancel для отмены)_"
+            "(нажмите /cancel для отмены)"
         )
         return URGENT_ALERT_DESC
         
@@ -396,7 +390,7 @@ async def urgent_alert_description(update: Update, context: ContextTypes.DEFAULT
         
         if alert_id:
             response_text = (
-                f"✅ **Срочное оповещение #{alert_id} создано!**\n\n"
+                f"✅ СРОЧНОЕ ОПОВЕЩЕНИЕ #{alert_id} СОЗДАНО!\n\n"
                 f"Оповещение будет рассмотрено в ближайшее время.\n"
                 f"Команда уведомлена о проблеме."
             )
@@ -415,7 +409,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Команда помощи"""
     try:
         help_text = (
-            "📚 **Справка по командам**\n\n"
+            "📚 СПРАВКА ПО КОМАНДАМ\n\n"
             "/start - Начать работу с ботом\n"
             "/framework - Обзор фреймворка\n"
             "/kickoff - Провести Kick-off встречу\n"
@@ -423,11 +417,11 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "/urgent - Создать срочное оповещение\n"
             "/pending - Посмотреть ожидающие запросы\n"
             "/help - Показать эту справку\n\n"
-            "💡 **Совет:** Все изменения должны иметь письменный след!\n"
+            "Совет: Все изменения должны иметь письменный след!\n"
             "Используйте /change_request для создания запросов."
         )
         
-        await update.message.reply_text(help_text, parse_mode='Markdown')
+        await update.message.reply_text(help_text)
         
     except Exception as e:
         logger.error(f"Error in help command: {e}")
@@ -436,12 +430,11 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def meetings_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Встречи (в разработке)"""
     await update.message.reply_text(
-        "📅 **Управление встречами**\n\n"
-        "**Рекомендуемое расписание:**\n"
+        "📅 УПРАВЛЕНИЕ ВСТРЕЧАМИ\n\n"
+        "Рекомендуемое расписание:\n"
         "• Статус-встреча с бизнесом: вторник и пятница, 11:00\n"
         "• Внутренний статус: за 2 часа до встречи с бизнесом\n\n"
-        "Функция в разработке. Скоро здесь появится возможность создавать встречи.",
-        parse_mode='Markdown'
+        "Функция в разработке. Скоро здесь появится возможность создавать встречи."
     )
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -458,8 +451,7 @@ async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     if update and update.effective_message:
         await update.effective_message.reply_text(
-            "❌ Произошла ошибка. Пожалуйста, попробуйте позже.\n"
-            "Если ошибка повторяется, обратитесь к администратору."
+            "❌ Произошла ошибка. Пожалуйста, попробуйте позже."
         )
 
 async def post_init(application: Application):
