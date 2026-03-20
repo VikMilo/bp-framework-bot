@@ -1,0 +1,16 @@
+{
+  "name": "BP Framework",
+  "short_name": "BPF",
+  "description": "Фреймворк управления бизнес-процессами",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#2c3e50",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

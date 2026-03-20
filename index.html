@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>BP Framework</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">
+                <span class="logo">🔷</span>
+                <h1>BP Framework</h1>
+            </div>
+            <div class="user-info" id="userInfo">
+                <span id="userName">Загрузка...</span>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="dashboard">📊 Дашборд</button>
+            <button class="tab-btn" data-tab="requests">📝 Запросы</button>
+            <button class="tab-btn" data-tab="new">➕ Новый</button>
+            <button class="tab-btn" data-tab="alerts">⚠️ Оповещения</button>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div class="tab-content active" id="dashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalRequests">0</div>
+                    <div class="stat-label">Всего запросов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pendingRequests">0</div>
+                    <div class="stat-label">В ожидании</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="highPriority">0</div>
+                    <div class="stat-label">Высокий приоритет</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="activeAlerts">0</div>
+                    <div class="stat-label">Активных оповещений</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📋 Принципы фреймворка</h3>
+                <div class="principles">
+                    <div class="principle-item">
+                        <span class="principle-icon">1️⃣</span>
+                        <div>
+                            <strong>Регулярные ревью</strong>
+                            <p>Статус-встречи 2 раза в неделю</p>
+                        </div>
+                    </div>
+                    <div class="principle-item">
+                        <span class="principle-icon">2️⃣</span>
+                        <div>
+                            <strong>Письменный след</strong>
+                            <p>Все изменения фиксируются</p>
+                        </div>
+                    </div>
+                    <div class="principle-item">
+                        <span class="principle-icon">3️⃣</span>
+                        <div>
+                            <strong>Каналы связи</strong>
+                            <p>Разделение срочного и важного</p>
+                        </div>
+                    </div>
+                    <div class="principle-item">
+                        <span class="principle-icon">4️⃣</span>
+                        <div>
+                            <strong>Защита от манипуляций</strong>
+                            <p>Правило 5 минут</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📅 Ближайшие встречи</h3>
+                <div class="meetings-list" id="meetingsList">
+                    <div class="meeting-item">
+                        <div class="meeting-type">🤝 Статус-встреча с бизнесом</div>
+                        <div class="meeting-date">Вторник, 11:00</div>
+                        <div class="meeting-date">Пятница, 11:00</div>
+                    </div>
+                    <div class="meeting-item">
+                        <div class="meeting-type">👥 Внутренний статус</div>
+                        <div class="meeting-date">За 2 часа до встречи с бизнесом</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Requests Tab -->
+        <div class="tab-content" id="requests">
+            <div class="filters">
+                <select id="priorityFilter">
+                    <option value="all">Все приоритеты</option>
+                    <option value="high">🔴 Высокий</option>
+                    <option value="medium">🟡 Средний</option>
+                    <option value="low">🟢 Низкий</option>
+                </select>
+                <select id="statusFilter">
+                    <option value="all">Все статусы</option>
+                    <option value="new">Новые</option>
+                    <option value="in_review">На рассмотрении</option>
+                    <option value="approved">Одобрены</option>
+                    <option value="rejected">Отклонены</option>
+                </select>
+                <button class="refresh-btn" id="refreshRequests">🔄</button>
+            </div>
+            <div class="requests-list" id="requestsList">
+                <div class="loading">Загрузка...</div>
+            </div>
+        </div>
+
+        <!-- New Request Tab -->
+        <div class="tab-content" id="new">
+            <form id="newRequestForm">
+                <div class="form-group">
+                    <label>Описание запроса *</label>
+                    <textarea id="requestDescription" rows="4" placeholder="Опишите, что нужно изменить и почему..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Приоритет *</label>
+                    <div class="priority-buttons">
+                        <button type="button" class="priority-btn" data-priority="high">🔴 Высокий</button>
+                        <button type="button" class="priority-btn" data-priority="medium">🟡 Средний</button>
+                        <button type="button" class="priority-btn" data-priority="low">🟢 Низкий</button>
+                    </div>
+                    <input type="hidden" id="requestPriority" value="medium">
+                </div>
+
+                <div class="form-group">
+                    <label>Ссылка на документ (опционально)</label>
+                    <input type="url" id="requestDocumentLink" placeholder="https://...">
+                </div>
+
+                <div class="form-group">
+                    <label>Обоснование/метрики</label>
+                    <textarea id="requestBusinessImpact" rows="3" placeholder="Какое влияние на бизнес? Какие метрики изменятся?"></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">📝 Создать запрос</button>
+            </form>
+        </div>
+
+        <!-- Alerts Tab -->
+        <div class="tab-content" id="alerts">
+            <button class="create-alert-btn" id="createAlertBtn">⚠️ Создать срочное оповещение</button>
+            <div class="alerts-list" id="alertsList">
+                <div class="loading">Загрузка...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal для создания оповещения -->
+    <div class="modal" id="alertModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚠️ Срочное оповещение</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="alertDescription" rows="5" placeholder="Опишите критическую проблему или блокировку..."></textarea>
+                <div class="alert-rule">
+                    <strong>📌 Правило:</strong> Только для оперативной ОС и критических блокировок!
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn">Отмена</button>
+                <button class="send-alert-btn">🚨 Отправить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
