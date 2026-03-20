@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 ) = range(11)
 
 # Конфигурация
-TOKEN = "YOUR_BOT_TOKEN_HERE"  # Замените на ваш токен
+TOKEN = "8747965944:AAHF7n-R7-CXx88YkMxwJXNiTEE9-LxJ_U8"  # Замените на ваш токен
 
 # Типы встреч по фреймворку
 class MeetingType(Enum):
