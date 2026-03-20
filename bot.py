@@ -522,7 +522,7 @@ def main():
         application.add_handler(change_request_conv)
         application.add_handler(urgent_conv)
         
- application.add_handler(CommandHandler('app', app_command))
+        application.add_handler(CommandHandler('app', app_command))
 
         # Обработчик ошибок
         application.add_error_handler(error_handler)
