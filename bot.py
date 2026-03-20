@@ -462,6 +462,31 @@ async def post_init(application: Application):
     logger.info(f"🤖 Bot username: @{application.bot.username}")
     logger.info("=" * 50)
 
+async def app_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Открыть Mini App"""
+    try:
+        # Замените URL на ваш реальный адрес GitHub Pages
+        miniapp_url = "https://ВАШ_АККАУНТ.github.io/bp-framework-miniapp/"
+        
+        keyboard = [[InlineKeyboardButton(
+            "📱 Открыть панель управления", 
+            web_app={"url": miniapp_url}
+        )]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        
+        await update.message.reply_text(
+            "📊 **BP Framework Mini App**\n\n"
+            "Нажмите кнопку ниже, чтобы открыть панель управления:\n"
+            "• Создавайте запросы на изменения\n"
+            "• Отслеживайте статусы\n"
+            "• Отправляйте срочные оповещения",
+            reply_markup=reply_markup
+        )
+        
+    except Exception as e:
+        logger.error(f"Error in app command: {e}")
+        await update.message.reply_text("❌ Произошла ошибка. Попробуйте позже.")
+
 def main():
     """Главная функция"""
     try:
@@ -497,6 +522,8 @@ def main():
         application.add_handler(change_request_conv)
         application.add_handler(urgent_conv)
         
+ application.add_handler(CommandHandler('app', app_command))
+
         # Обработчик ошибок
         application.add_error_handler(error_handler)
         
